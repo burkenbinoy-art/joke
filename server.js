@@ -115,6 +115,11 @@ app.get("/joke/json", async (req, res) => {
   }
 });
 
+// GET /health — readiness check for hosting platforms
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
 // ── Start ─────────────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`✅  Joke App running at http://localhost:${PORT}`);
