@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JokeMeUp — Personalised Jokes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="page">
+  <aside class="left">
+    <div class="left-top">
+      <div class="label-tag">v2.jokeapi.dev</div>
+      <h1 class="big-title">
+        <span class="line-1">JOKE</span>
+        <span class="line-2">ME</span>
+        <span class="line-3">UP.</span>
+      </h1>
+      <p class="sub">
+        Enter your name. Our server maps it to a joke category,
+        fires an Axios request at JokeAPI, and serves back something
+        just for you.
+      </p>
+    </div>
+    <div class="left-middle">
+      <p class="steps-label">// how it works</p>
+      <div class="step-list">
+        <div class="step-item">
+          <span class="step-n">01</span>
+          <p class="step-txt">You type your name and hit submit.</p>
+        </div>
+        <div class="step-item">
+          <span class="step-n">02</span>
+          <p class="step-txt"><strong>Express.js</strong> receives the POST and maps your name to a category using char-code arithmetic.</p>
+        </div>
+        <div class="step-item">
+          <span class="step-n">03</span>
+          <p class="step-txt"><strong>Axios</strong> calls <strong>JokeAPI v2</strong> with safe content filters applied.</p>
+        </div>
+        <div class="step-item">
+          <span class="step-n">04</span>
+          <p class="step-txt">The joke is personalised and rendered back via <strong>EJS</strong>.</p>
+        </div>
+      </div>
+    </div>
+    <footer class="left-footer">
+      Powered by <a href="https://sv443.net/jokeapi/v2/" target="_blank" rel="noopener">JokeAPI v2</a>
+      &nbsp;&bull;&nbsp; Built with Express + Axios
+    </footer>
+  </aside>
+
+  <main class="right">
+    <p class="form-heading">// enter your name</p>
+    <form action="/joke" method="POST" class="joke-form" id="jokeForm">
+      <div class="field-wrap">
+        <input
+          type="text"
+          id="name"
+          name="name"
+          class="name-input"
+          placeholder="Your name..."
+          value="<%= name %>"
+          maxlength="50"
+          autocomplete="given-name"
+          required
+        />
+        <span class="field-line"></span>
+      </div>
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <span class="btn-label">Get my joke</span>
+        <span class="btn-arrow">&#8594;</span>
+      </button>
+    </form>
+
+    <div class="divider"></div>
+
+    <% if (error) { %>
+    <div class="result-wrap">
+      <div class="error-box">
+        <p><%= error %></p>
+      </div>
+    </div>
+    <% } %>
+
+    <% if (joke) { %>
+    <div class="result-wrap">
+      <div class="joke-box">
+        <div class="joke-tags">
+          <span class="tag tag-cat"><%= joke.category %></span>
+          <span class="tag"><%= joke.type %></span>
+        </div>
+        <div class="joke-number">#<%= String(joke.id).padStart(4, '0') %></div>
+        <% if (joke.type === 'twopart') { %>
+          <p class="joke-setup"><%= joke.setup %></p>
+          <div class="punchline-area">
+            <p class="joke-delivery" id="punchline"><%= joke.delivery %></p>
+            <button class="reveal-btn" id="revealBtn">
+              <span class="reveal-dot"></span>
+              Reveal punchline
+            </button>
+          </div>
+        <% } else { %>
+          <p class="joke-single"><%= joke.single %></p>
+        <% } %>
+        <div class="joke-foot">
+          <span class="joke-id">JOKE_ID: <%= joke.id %></span>
+          <button class="share-btn" onclick="shareJoke()">Share &rarr;</button>
+        </div>
+      </div>
+    </div>
+    <% } %>
+
+    <% if (!joke && !error) { %>
+    <div class="empty-state">
+      <p class="empty-big">HA<span class="cursor-blink"></span></p>
+      <p class="empty-sub">
+        Every great punchline needs a name to aim at.<br/>
+        Type yours above and press Enter.
+      </p>
+    </div>
+    <% } %>
+  </main>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>
